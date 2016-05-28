@@ -1,0 +1,6 @@
+{
+  "presets": [
+    "es2015-script",
+    "stage-0"
+  ]
+}

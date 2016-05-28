@@ -1,0 +1,27 @@
+{
+  "name": "awesome-presentation-js",
+  "version": "1.0.0",
+  "description": "New way to make a web presentation",
+  "main": "dist/awesome-presentation.min.js",
+  "author": "tui2tone <tui2tone@gmail.com> (http://tui2tone.github.io)",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-react-display-name": "^6.3.13",
+    "babel-plugin-transform-runtime": "^6.8.0",
+    "babel-polyfill": "^6.5.0",
+    "babel-preset-es2015": "^6.5.0",
+    "babel-preset-es2015-script": "^1.0.0",
+    "babel-preset-stage-0": "^6.5.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.0.1",
+    "gulp": "^3.9.1",
+    "gulp-notify": "^2.2.0",
+    "gulp-plumber": "^1.1.0",
+    "require-dir": "^0.3.0",
+    "run-sequence": "^1.2.1",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}
