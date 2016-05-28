@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Awesome-Presention.js</title>
+
+  <link rel="stylesheet" type="text/css" href="../bin/css/awesome-presentation.css">
+
+  <style type="text/css">
+    
+    html, body {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div ap-page="1">
+      <h3 ap-x="3" 
+          ap-y="1"
+          ap-align="center">Hello World Grid</h3>
+      <div ap-x="3" 
+          ap-y="3"
+          ap-align="center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</div>
+    </div>
+    <div ap-page="2">
+      <h3 ap-x="3" 
+          ap-y="1"
+          ap-align="center">Hello World Grid2</h3>
+      <div ap-x="3" 
+          ap-y="4"
+          ap-align="center">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</div>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="../bin/js/app.js"></script>
+  <script type="text/javascript">
+    var present = new Presentation("#app");
+  </script>
+</body>
+</html>

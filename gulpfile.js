@@ -8,5 +8,5 @@ gulp.task("js", function(callback) {
 });
 
 gulp.task("dev", function(callback) {
-  runSequence("js", "watch", callback)
+  runSequence("js","sass", "watch", callback)
 });

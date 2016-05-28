@@ -6,6 +6,11 @@ var Grid = class {
     this.opts = {
       ...opts
     }
+
+    this.pos = {
+      x: 100/x,
+      y: 100/y
+    }
   }
 }
 
