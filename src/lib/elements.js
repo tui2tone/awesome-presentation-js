@@ -5,6 +5,7 @@ var Elements = class {
     this.container = container;
     this.elmDocument = this.getAllElmDocument();
     this.elms = this.initElmComponent(grid);
+    this.max = this.countTimeline();
   }
 
   getAllElmDocument() {
@@ -29,6 +30,37 @@ var Elements = class {
         break;
       }
     }
+  }
+
+  countTimeline() {
+    let max = 0
+    this.elms.map((item) => {
+      if(item.pos.max > max) {
+        max = item.pos.max
+      }
+    })
+
+    return max
+  }
+
+  show(num) {
+    this.elms.map((item) => {
+      item.pos.display.map((dis) => {
+        if(typeof dis == "object") {
+          if(dis.indexOf(num) > -1) {
+            item.show()
+          } else {
+            item.hide()
+          }
+        } else {
+          if(dis == num) {
+            item.show()
+          } else {
+            item.hide()
+          }
+        }
+      })
+    });
   }
 }
 

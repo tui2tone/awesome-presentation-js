@@ -1,7 +1,8 @@
 var Player = class {
 
-  constructor(presentation, initPage = 1) {
+  constructor(presentation, initPage = 1, initElm = 1) {
     this.page = initPage;
+    this.elm = initElm;
     this.totalPage = presentation.pages.count();
     this.presentation = presentation;
     this.addControlKey()
@@ -25,7 +26,7 @@ var Player = class {
   }
 
   next() {
-    let { page, totalPage, presentation } = this
+    let { page, totalPage, presentation, nextElm } = this
     if(page < totalPage) {
       this.page = page+1
       presentation.pages.show(this.page);
@@ -41,6 +42,10 @@ var Player = class {
   }
 
 
+  // nextElm() {
+  //   let { presentation, page } = this
+  //   presentation.pages[page].nextElm()
+  // }
 }
 
 module.exports = Player;
