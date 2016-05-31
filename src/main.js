@@ -9,6 +9,7 @@ var Presentation = class {
       className: "ap-container",
       width: "100%",
       height: "100%",
+      ratio: "16:9",
       grid: {
         x: 6,
         y: 6
@@ -25,10 +26,38 @@ var Presentation = class {
 
   init() {
     this.cssClassInject()
+    window.addEventListener("resize", this.resizeEvent.bind(this));
   }
 
   cssClassInject() {
-    this.container.className += this.opts.className
+    const { container, opts } = this
+    container.className += opts.className
+
+    this.ratioControl()
+  }
+
+  resizeEvent() {
+    this.ratioControl()
+  }
+
+  ratioControl() {
+    const { container, opts } = this
+    const pos = container.getBoundingClientRect();
+    let ratio = opts.ratio.split(":")
+    ratio = {
+      x: parseInt(ratio[0]),
+      y: parseInt(ratio[1])
+    }
+
+    const width = (window.innerHeight / ratio.y) * ratio.x
+    if(width > window.innerWidth) {
+      this.container.style.width = "100%"
+      this.container.style.height = (window.innerWidth / ratio.x) * ratio.y + "px"
+    } else {
+      this.container.style.width = (window.innerHeight / ratio.y) * ratio.x + "px"
+      this.container.style.height = "100%"
+
+    }
   }
 };
 
