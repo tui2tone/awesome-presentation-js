@@ -27,7 +27,8 @@ var Player = class {
 
   next() {
     let { page, totalPage, presentation, nextElm } = this
-    if(page < totalPage) {
+    const isPlayElm = this.nextElm()
+    if(page < totalPage && !isPlayElm) {
       this.page = page+1
       presentation.pages.show(this.page);
     }
@@ -35,17 +36,25 @@ var Player = class {
 
   prev() {
     let { page, totalPage, presentation } = this
-    if(page > 1) {
+    const isPlayElm = this.prevElm()
+    if(page > 1 && !isPlayElm) {
       this.page = page-1
       presentation.pages.show(this.page);
     }
   }
 
 
-  // nextElm() {
-  //   let { presentation, page } = this
-  //   presentation.pages[page].nextElm()
-  // }
+  nextElm() {
+    let { presentation, page } = this
+    let { pages } = presentation
+    return pages.pages[page-1].next()
+  }
+
+  prevElm() {
+    let { presentation, page } = this
+    let { pages } = presentation
+    return pages.pages[page-1].prev()
+  }
 }
 
 module.exports = Player;

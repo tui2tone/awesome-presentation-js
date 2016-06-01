@@ -11,7 +11,7 @@ var Page = class {
     this.elements = new Elements(container, grid);
     this.timeline = {
       current: 1,
-      all: this.elements.countTimeline()
+      all: this.elements.max
     }
 
     // Initial
@@ -33,6 +33,7 @@ var Page = class {
 
   show() {
     this.container.style.display = "block";
+    this.elements.show(this.timeline.current)
   }
 
   hide() {
@@ -44,21 +45,27 @@ var Page = class {
     if(current < all) {
       this.timeline = {
         ...this.timelime,
-        current: ++current
+        current: ++current,
+        all: all
       }
       this.elements.show(this.timeline.current)
+      return true
     }
+    return false
   }
 
   prev() {
     let { current, all } = this.timeline
-    if(all > 1) {
+    if(current > 1) {
       this.timeline = {
         ...this.timelime,
-        current: --current
+        current: --current,
+        all: all
       }
       this.elements.show(this.timeline.current)
+      return true
     }
+    return false
   }
 
 
