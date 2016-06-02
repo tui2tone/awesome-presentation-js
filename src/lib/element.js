@@ -1,3 +1,5 @@
+var Animate = require("./animate");
+
 var Element = class {
   constructor(container, grid) {
     this.config = {
@@ -33,7 +35,11 @@ var Element = class {
     return {
       x: container.getAttribute("ap-x"),
       y: container.getAttribute("ap-y"),
+      width: container.getAttribute("ap-width"),
+      height: container.getAttribute("ap-height"),
       align: container.getAttribute("ap-align"),
+      animateIn: container.getAttribute("ap-animate-in"),
+      animateOut: container.getAttribute("ap-animate-out"),
       display: display || 0,
       max: max || 1
     }
@@ -62,6 +68,12 @@ var Element = class {
 
     this.container.style.left = (pos.x * elmPos.x ) + "%";
     this.container.style.top = (pos.y * elmPos.y ) + "%";
+    if(elmPos.width != undefined) {
+      this.container.style.width = (pos.x * elmPos.width ) + "%";
+    }
+    if(elmPos.height != undefined) {
+      this.container.style.height = (pos.x * elmPos.height ) + "%";
+    }
   }
 
   max() {
@@ -69,11 +81,34 @@ var Element = class {
   }
 
   show() {
+    let { style } = this.container
+    const { animateIn } = this.pos
+    const animateStyle = Animate("elm", animateIn)
+    for (var key in animateStyle) {
+      style[key] = animateStyle[key]
+    }
     this.container.style.display = "block";
+
+    if(animateStyle != undefined && animateStyle != "") {
+      setTimeout(() => {
+        this.posInject()
+      }, 0);
+    }
   }
 
   hide() {
-    this.container.style.display = "none";
+
+    let { style } = this.container
+    const { animateIn } = this.pos
+    const animateStyle = Animate("elm", animateIn)
+
+    if(animateStyle != undefined && animateStyle != "") {
+      for (var key in animateStyle) {
+        style[key] = animateStyle[key]
+      }
+    } else {
+      this.container.style.display = "none";
+    }
   }
 
   

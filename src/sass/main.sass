@@ -1,6 +1,7 @@
 .ap-container
   position: relative;
   margin: 0 auto;
+  overflow: hidden;
   height: 100%;
   width: 100%;
   background-color: #DDD;
@@ -9,8 +10,10 @@
     display: none;
     width: 100%;
     height: 100%;
+    transition: all 0.2s ease;
     .ap-elm-container
       width: auto
       position: absolute;
+      transition: all 0.2s ease;
       &.--center
         transform: translate(-50%,-50%);
