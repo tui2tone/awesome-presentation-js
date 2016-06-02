@@ -48,15 +48,15 @@ var Elements = class {
       item.pos.display.map((dis) => {
         if(typeof dis == "object") {
           if(dis.indexOf(num) > -1) {
-            item.show()
+            item.show(num)
           } else {
-            item.hide()
+            item.hide(num)
           }
         } else {
           if(dis == num) {
-            item.show()
+            item.show(num)
           } else {
-            item.hide()
+            item.hide(num)
           }
         }
       })

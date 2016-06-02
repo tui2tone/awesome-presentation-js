@@ -14,24 +14,40 @@ var Element = class {
   }
 
   getPosNumber(container) {
-    let max = 0
-    let temp = 0
-    const display = (container.getAttribute("ap-display") || "").split(",").map((item) => {
-        if(item.indexOf("-") > -1) {
-          return item.split("-").map((sub_item) => {
-            temp = parseInt(sub_item)
-            if(temp > max) {
-              max = temp
-            }
-            return temp
-          })
-        }
-        temp = parseInt(item)
+    const isJson = IsJsonString(container.getAttribute("ap-display"))
+    let max = 0,
+        temp = 0,
+        display = null,
+        customDisplay = {}
+
+    if(isJson && container.getAttribute("ap-display").length > 2) {
+      customDisplay = JSON.parse(container.getAttribute("ap-display"))
+      display = []
+      for(let key in customDisplay) {
+        temp = parseInt(key)
         if(temp > max) {
           max = temp
         }
-        return temp
-      })
+        display.push(key)
+      }
+    } else {
+      display = (container.getAttribute("ap-display") || "").split(",").map((item) => {
+          if(item.indexOf("-") > -1) {
+            return item.split("-").map((sub_item) => {
+              temp = parseInt(sub_item)
+              if(temp > max) {
+                max = temp
+              }
+              return temp
+            })
+          }
+          temp = parseInt(item)
+          if(temp > max) {
+            max = temp
+          }
+          return temp
+        })
+    }
     return {
       x: container.getAttribute("ap-x"),
       y: container.getAttribute("ap-y"),
@@ -41,6 +57,7 @@ var Element = class {
       animateIn: container.getAttribute("ap-animate-in"),
       animateOut: container.getAttribute("ap-animate-out"),
       display: display || 0,
+      customDisplay: customDisplay || {},
       max: max || 1
     }
   }
@@ -62,17 +79,36 @@ var Element = class {
     }
   }
 
-  posInject() {
+  posInject(num) {
     const pos = this.grid.pos;
     const elmPos = this.pos;
 
-    this.container.style.left = (pos.x * elmPos.x ) + "%";
-    this.container.style.top = (pos.y * elmPos.y ) + "%";
-    if(elmPos.width != undefined) {
-      this.container.style.width = (pos.x * elmPos.width ) + "%";
-    }
-    if(elmPos.height != undefined) {
-      this.container.style.height = (pos.x * elmPos.height ) + "%";
+    if(elmPos.customDisplay[num] != undefined) {
+      if(elmPos.customDisplay[num].width != undefined) {
+        this.container.style.width = (pos.x * elmPos.customDisplay[num].width ) + "%";
+      }
+      if(elmPos.customDisplay[num].height != undefined) {
+        this.container.style.height = (pos.x * elmPos.customDisplay[num].height ) + "%";
+      }
+      if(elmPos.customDisplay[num].x != undefined) {
+        this.container.style.left = (pos.x * elmPos.customDisplay[num].x ) + "%";
+      } else {
+        this.container.style.left = (pos.x * elmPos.x ) + "%";
+      }
+      if(elmPos.customDisplay[num].y != undefined) {
+        this.container.style.top = (pos.y * elmPos.customDisplay[num].y ) + "%";
+      } else {
+        this.container.style.top = (pos.y * elmPos.y ) + "%";
+      }
+    } else {
+      if(elmPos.width != undefined) {
+        this.container.style.width = (pos.x * elmPos.width ) + "%";
+      }
+      if(elmPos.height != undefined) {
+        this.container.style.height = (pos.x * elmPos.height ) + "%";
+      }
+      this.container.style.left = (pos.x * elmPos.x ) + "%";
+      this.container.style.top = (pos.y * elmPos.y ) + "%";
     }
   }
 
@@ -80,7 +116,7 @@ var Element = class {
     return this.pos.max
   }
 
-  show() {
+  show(num) {
     let { style } = this.container
     const { animateIn } = this.pos
     const animateStyle = Animate("elm", animateIn)
@@ -91,16 +127,16 @@ var Element = class {
 
     if(animateStyle != undefined && animateStyle != "") {
       setTimeout(() => {
-        this.posInject()
+        this.posInject(num)
       }, 0);
     }
   }
 
-  hide() {
+  hide(num) {
 
     let { style } = this.container
-    const { animateIn } = this.pos
-    const animateStyle = Animate("elm", animateIn)
+    const { animateOut } = this.pos
+    const animateStyle = Animate("elm", animateOut)
 
     if(animateStyle != undefined && animateStyle != "") {
       for (var key in animateStyle) {
@@ -112,6 +148,15 @@ var Element = class {
   }
 
   
+}
+
+function IsJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
 }
 
 module.exports = Element;

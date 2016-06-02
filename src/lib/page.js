@@ -66,7 +66,18 @@ var Page = class {
   }
 
   hide() {
-    this.container.style.display = "none";
+
+    let { style } = this.container
+    const { animateOut } = this.pos
+    const animateStyle = Animate("page", animateOut)
+
+    if(animateStyle != undefined && animateStyle != "") {
+      for (var key in animateStyle) {
+        style[key] = animateStyle[key]
+      }
+    } else {
+      this.container.style.display = "none";
+    }
   }
 
   next() {
