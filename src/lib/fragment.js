@@ -1,4 +1,5 @@
 var Animate = require("./animate");
+var Elements = require("./Elements");
 var JsonUtil = require("../utils/json")
 
 var Fragment = class {
@@ -8,7 +9,12 @@ var Fragment = class {
     };
     this.container = container;
     this.pos = this.getPosNumber(container);
-    this.grid = grid
+    this.elements = new Elements(container);
+    this.grid = grid;
+    this.timeline = {
+      current: 1,
+      all: this.elements.max
+    }
 
     // Initial
     this.init()
@@ -176,6 +182,35 @@ var Fragment = class {
         this.container.style.display = "none";
       }, 200);
     }
+  }
+
+
+  next() {
+    let { current, all } = this.timeline
+    if(current < all) {
+      this.timeline = {
+        ...this.timelime,
+        current: ++current,
+        all: all
+      }
+      this.elements.show(this.timeline.current,"next")
+      return true
+    }
+    return false
+  }
+
+  prev() {
+    let { current, all } = this.timeline
+    if(current > 1) {
+      this.timeline = {
+        ...this.timelime,
+        current: --current,
+        all: all
+      }
+      this.elements.show(this.timeline.current,"prev")
+      return true
+    }
+    return false
   }
 }
 

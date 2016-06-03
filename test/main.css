@@ -1,3 +1,18 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:400,700,300);
+
+body {
+  font-family: 'Lato', sans-serif;
+}
 .bg-white {
-  background-color: #CCC;
+  background-color: #3E4651;
+}
+
+.page-1 {
+  background-color: #112233;
+
+}
+
+.page-1 .logo {
+  color: #66CC99;
+  font-size: 8em;
 }

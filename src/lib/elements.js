@@ -43,23 +43,29 @@ var Elements = class {
     return max
   }
 
-  show(num) {
+  show(num, mode) {
     this.elms.map((item) => {
-      item.pos.display.map((dis) => {
+      let is_hide = true
+      for (var i = 0; i < item.pos.display.length; i++) {
+        const dis = item.pos.display[i]
         if(typeof dis == "object") {
           if(dis.indexOf(num) > -1) {
-            item.show(num)
-          } else {
-            item.hide(num)
+            is_hide = false
+            item.show(num, mode)
+            break;
           }
         } else {
-          if(dis == num) {
-            item.show(num)
-          } else {
-            item.hide(num)
+          if(parseInt(dis) == num) {
+            is_hide = false
+            item.show(num, mode)
+            break;
           }
         }
-      })
+      }
+
+      if(is_hide) {
+        item.hide(num, mode)
+      }
     });
   }
 }

@@ -4,7 +4,7 @@ var Animate = require("./animate");
 var Page = class {
   constructor(container, grid) {
     this.config = {
-      className: "ap-page-container"
+      className: " ap-page-container"
     };
 
     this.container = container;
@@ -91,30 +91,38 @@ var Page = class {
 
   next() {
     let { current, all } = this.timeline
-    if(current < all) {
-      this.timeline = {
-        ...this.timelime,
-        current: ++current,
-        all: all
+    const isNextElm = this.fragments.fms[current-1].next()
+    if(!isNextElm) {
+      if(current < all) {
+        this.timeline = {
+          ...this.timelime,
+          current: ++current,
+          all: all
+        }
+        this.fragments.show(this.timeline.current,"next")
+        return true
       }
-      this.fragments.show(this.timeline.current,"next")
-      return true
+      return false
     }
-    return false
+    return true
   }
 
   prev() {
     let { current, all } = this.timeline
-    if(current > 1) {
-      this.timeline = {
-        ...this.timelime,
-        current: --current,
-        all: all
+    const isNextElm = this.fragments.fms[current-1].prev()
+    if(!isNextElm) {
+      if(current > 1) {
+        this.timeline = {
+          ...this.timelime,
+          current: --current,
+          all: all
+        }
+        this.fragments.show(this.timeline.current,"prev")
+        return true
       }
-      this.fragments.show(this.timeline.current,"prev")
-      return true
+      return false
     }
-    return false
+    return true
   }
 
 

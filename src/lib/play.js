@@ -1,7 +1,8 @@
 var Player = class {
 
-  constructor(presentation, initPage = 1, initElm = 1) {
+  constructor(presentation, initPage = 1, initFm = 1, initElm = 1) {
     this.page = initPage;
+    this.fm = initFm;
     this.elm = initElm;
     this.totalPage = presentation.pages.count();
     this.presentation = presentation;
@@ -26,31 +27,31 @@ var Player = class {
   }
 
   next() {
-    let { page, totalPage, presentation, nextElm } = this
-    const isPlayElm = this.nextElm()
-    if(page < totalPage && !isPlayElm) {
+    let { page, totalPage, presentation } = this
+    const isPlayFragment = this.nextFragment()
+    if(page < totalPage && !isPlayFragment) {
       this.page = page+1
-      presentation.pages.show(this.page, "next");
+      presentation.pages.show(page, "next");
     }
   }
 
   prev() {
     let { page, totalPage, presentation } = this
-    const isPlayElm = this.prevElm()
-    if(page > 1 && !isPlayElm) {
+    const isPlayFragment = this.prevFragment()
+    if(page > 1 && !isPlayFragment) {
       this.page = page-1
-      presentation.pages.show(this.page, "prev");
+      presentation.pages.show(page, "prev");
     }
   }
 
 
-  nextElm() {
+  nextFragment() {
     let { presentation, page } = this
     let { pages } = presentation
     return pages.pages[page-1].next()
   }
 
-  prevElm() {
+  prevFragment() {
     let { presentation, page } = this
     let { pages } = presentation
     return pages.pages[page-1].prev()
