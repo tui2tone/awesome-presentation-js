@@ -30,7 +30,7 @@ var Player = class {
     const isPlayElm = this.nextElm()
     if(page < totalPage && !isPlayElm) {
       this.page = page+1
-      presentation.pages.show(this.page);
+      presentation.pages.show(this.page, "next");
     }
   }
 
@@ -39,7 +39,7 @@ var Player = class {
     const isPlayElm = this.prevElm()
     if(page > 1 && !isPlayElm) {
       this.page = page-1
-      presentation.pages.show(this.page);
+      presentation.pages.show(this.page, "prev");
     }
   }
 

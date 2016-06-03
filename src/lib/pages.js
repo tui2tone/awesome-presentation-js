@@ -35,12 +35,12 @@ var Pages = class {
     return this.pages.length;
   }
 
-  show(num) {
+  show(num, mode) {
     this.pages.map((item) => {
       if(item.page == num) {
-        item.show()
+        item.show(mode)
       } else {
-        item.hide()
+        item.hide(mode)
       }
     });
   }

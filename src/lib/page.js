@@ -1,4 +1,4 @@
-var Elements = require("./elements");
+var Fragments = require("./fragments");
 var Animate = require("./animate");
 
 var Page = class {
@@ -9,16 +9,16 @@ var Page = class {
 
     this.container = container;
     this.page = this.getPageNumber(container);
-    this.elements = new Elements(container, grid);
+    this.fragments = new Fragments(container, grid);
     this.pos = this.getPos(container);
     this.timeline = {
       current: 1,
-      all: this.elements.max
+      all: this.fragments.max
     }
 
     // Initial
     this.init()
-    this.elements.show(this.timeline.current)
+    this.fragments.show(this.timeline.current)
   }
 
   getPageNumber(container) {
@@ -46,37 +46,46 @@ var Page = class {
     this.container.className += this.config.className
   }
 
-  show() {
+  show(mode) {
     let { style } = this.container
+    const { animateIn, animateOut } = this.pos
+    let animateStyle = Animate("fm", mode, animateIn)
+    if(mode == "prev") {
+      animateStyle = Animate("fm", mode, animateOut)
 
-    const { animateIn } = this.pos
-    const animateStyle = Animate("page", animateIn)
-    for (var key in animateStyle) {
-      style[key] = animateStyle[key]
     }
-
-    style.display = "block";
+    this.posInject()
+    for (var key in animateStyle) {
+      style[key] = parseInt(style[key].replace("%","")) + animateStyle[key] + "%"
+    }
+    this.container.style.display = "block";
 
     if(animateStyle != undefined && animateStyle != "") {
       setTimeout(() => {
         this.posInject()
       }, 0);
     }
-    this.elements.show(this.timeline.current)
   }
 
-  hide() {
-
+  hide(mode) {
     let { style } = this.container
-    const { animateOut } = this.pos
-    const animateStyle = Animate("page", animateOut)
+    const { animateIn, animateOut } = this.pos
+    let animateStyle = Animate("fm", mode, animateIn)
+    if(mode == "next") {
+      animateStyle = Animate("fm", mode, animateOut)
+    }
 
     if(animateStyle != undefined && animateStyle != "") {
+      this.posInject()
       for (var key in animateStyle) {
-        style[key] = animateStyle[key]
+        style[key] = parseInt(style[key].replace("%","")) + animateStyle[key] + "%"
       }
-    } else {
-      this.container.style.display = "none";
+    }
+
+    if(style.display != "none"){
+      setTimeout(() => {
+        this.container.style.display = "none";
+      }, 200);
     }
   }
 
@@ -88,7 +97,7 @@ var Page = class {
         current: ++current,
         all: all
       }
-      this.elements.show(this.timeline.current)
+      this.fragments.show(this.timeline.current,"next")
       return true
     }
     return false
@@ -102,7 +111,7 @@ var Page = class {
         current: --current,
         all: all
       }
-      this.elements.show(this.timeline.current)
+      this.fragments.show(this.timeline.current,"prev")
       return true
     }
     return false

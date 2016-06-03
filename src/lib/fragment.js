@@ -1,10 +1,10 @@
 var Animate = require("./animate");
 var JsonUtil = require("../utils/json")
 
-var Element = class {
+var Fragment = class {
   constructor(container, grid) {
     this.config = {
-      className: " ap-elm-container"
+      className: " ap-fragment-container"
     };
     this.container = container;
     this.pos = this.getPosNumber(container);
@@ -16,6 +16,7 @@ var Element = class {
 
   getPosNumber(container) {
     const isJson = JsonUtil.isJson(container.getAttribute("ap-display"))
+
     let max = 0,
         temp = 0,
         display = null,
@@ -29,7 +30,24 @@ var Element = class {
         if(temp > max) {
           max = temp
         }
-        display.push(key)
+
+        display.push(key.split(",").map((item) => {
+            if(item.indexOf("-") > -1) {
+              return item.split("-").map((sub_item) => {
+                temp = parseInt(sub_item)
+                if(temp > max) {
+                  max = temp
+                }
+                return temp
+              })
+            }
+            temp = parseInt(item)
+            if(temp > max) {
+              max = temp
+            }
+            return temp
+          })
+        )
       }
     } else {
       display = (container.getAttribute("ap-display") || "").split(",").map((item) => {
@@ -70,10 +88,10 @@ var Element = class {
 
   cssClassInject() {
 
-    const elmPos = this.pos;
+    const fmPos = this.pos;
     this.container.className += this.config.className
 
-    switch(elmPos.align) {
+    switch(fmPos.align) {
       case "center":
         this.container.className += " --center"
         break;
@@ -82,34 +100,34 @@ var Element = class {
 
   posInject(num) {
     const pos = this.grid.pos;
-    const elmPos = this.pos;
+    const fmPos = this.pos;
 
-    if(elmPos.customDisplay[num] != undefined) {
-      if(elmPos.customDisplay[num].width != undefined) {
-        this.container.style.width = (pos.x * elmPos.customDisplay[num].width ) + "%";
+    if(fmPos.customDisplay[num] != undefined) {
+      if(fmPos.customDisplay[num].width != undefined) {
+        this.container.style.width = (pos.x * fmPos.customDisplay[num].width ) + "%";
       }
-      if(elmPos.customDisplay[num].height != undefined) {
-        this.container.style.height = (pos.x * elmPos.customDisplay[num].height ) + "%";
+      if(fmPos.customDisplay[num].height != undefined) {
+        this.container.style.height = (pos.x * fmPos.customDisplay[num].height ) + "%";
       }
-      if(elmPos.customDisplay[num].x != undefined) {
-        this.container.style.left = (pos.x * elmPos.customDisplay[num].x ) + "%";
+      if(fmPos.customDisplay[num].x != undefined) {
+        this.container.style.left = (pos.x * fmPos.customDisplay[num].x ) + "%";
       } else {
-        this.container.style.left = (pos.x * elmPos.x ) + "%";
+        this.container.style.left = (pos.x * fmPos.x ) + "%";
       }
-      if(elmPos.customDisplay[num].y != undefined) {
-        this.container.style.top = (pos.y * elmPos.customDisplay[num].y ) + "%";
+      if(fmPos.customDisplay[num].y != undefined) {
+        this.container.style.top = (pos.y * fmPos.customDisplay[num].y ) + "%";
       } else {
-        this.container.style.top = (pos.y * elmPos.y ) + "%";
+        this.container.style.top = (pos.y * fmPos.y ) + "%";
       }
     } else {
-      if(elmPos.width != undefined) {
-        this.container.style.width = (pos.x * elmPos.width ) + "%";
+      if(fmPos.width != undefined) {
+        this.container.style.width = (pos.x * fmPos.width ) + "%";
       }
-      if(elmPos.height != undefined) {
-        this.container.style.height = (pos.x * elmPos.height ) + "%";
+      if(fmPos.height != undefined) {
+        this.container.style.height = (pos.x * fmPos.height ) + "%";
       }
-      this.container.style.left = (pos.x * elmPos.x ) + "%";
-      this.container.style.top = (pos.y * elmPos.y ) + "%";
+      this.container.style.left = (pos.x * fmPos.x ) + "%";
+      this.container.style.top = (pos.y * fmPos.y ) + "%";
     }
   }
 
@@ -117,12 +135,17 @@ var Element = class {
     return this.pos.max
   }
 
-  show(num) {
+  show(num, mode) {
     let { style } = this.container
-    const { animateIn } = this.pos
-    const animateStyle = Animate("elm", animateIn)
+    const { animateIn, animateOut } = this.pos
+    let animateStyle = Animate("fm", mode, animateIn)
+    if(mode == "prev") {
+      animateStyle = Animate("fm", mode, animateOut)
+
+    }
+    this.posInject(num)
     for (var key in animateStyle) {
-      style[key] = animateStyle[key]
+      style[key] = parseInt(style[key].replace("%","")) + animateStyle[key] + "%"
     }
     this.container.style.display = "block";
 
@@ -133,22 +156,27 @@ var Element = class {
     }
   }
 
-  hide(num) {
-
+  hide(num, mode) {
     let { style } = this.container
-    const { animateOut } = this.pos
-    const animateStyle = Animate("elm", animateOut)
+    const { animateIn, animateOut } = this.pos
+    let animateStyle = Animate("fm", mode, animateIn)
+    if(mode == "next") {
+      animateStyle = Animate("fm", mode, animateOut)
+    }
 
     if(animateStyle != undefined && animateStyle != "") {
+      this.posInject(num)
       for (var key in animateStyle) {
-        style[key] = animateStyle[key]
+        style[key] = parseInt(style[key].replace("%","")) + animateStyle[key] + "%"
       }
-    } else {
-      this.container.style.display = "none";
+    }
+
+    if(style.display != "none"){
+      setTimeout(() => {
+        this.container.style.display = "none";
+      }, 200);
     }
   }
-
-  
 }
 
-module.exports = Element;
+module.exports = Fragment;
