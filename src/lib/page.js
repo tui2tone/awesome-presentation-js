@@ -48,6 +48,7 @@ var Page = class {
 
   show(mode) {
     let { style } = this.container
+    console.log(this.timeline)
     const { animateIn, animateOut } = this.pos
     let animateStyle = Animate("fm", mode, animateIn)
     if(mode == "prev") {
@@ -91,25 +92,39 @@ var Page = class {
 
   next() {
     let { current, all } = this.timeline
-    const isNextElm = this.fragments.fms[current-1].next()
-    if(!isNextElm) {
-      if(current < all) {
-        this.timeline = {
-          ...this.timelime,
-          current: ++current,
-          all: all
+      let isNextElm = false
+      this.fragments.fms.map((item) => {
+        if(item.pos.display.indexOf(current) > -1) {
+          if(item.next()) {
+            isNextElm = true
+          }
         }
-        this.fragments.show(this.timeline.current,"next")
-        return true
+      })
+      if(!isNextElm) {
+        if(current < all) {
+          this.timeline = {
+            ...this.timelime,
+            current: ++current,
+            all: all
+          }
+          this.fragments.show(this.timeline.current,"next")
+          return true
+        }
+        return false
       }
-      return false
-    }
-    return true
+      return true
   }
 
   prev() {
     let { current, all } = this.timeline
-    const isNextElm = this.fragments.fms[current-1].prev()
+    let isNextElm = false
+    this.fragments.fms.map((item) => {
+      if(item.pos.display.indexOf(current) > -1) {
+        if(item.prev()) {
+          isNextElm = true
+        }
+      }
+    })
     if(!isNextElm) {
       if(current > 1) {
         this.timeline = {

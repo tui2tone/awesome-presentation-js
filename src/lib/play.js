@@ -31,7 +31,7 @@ var Player = class {
     const isPlayFragment = this.nextFragment()
     if(page < totalPage && !isPlayFragment) {
       this.page = page+1
-      presentation.pages.show(page, "next");
+      presentation.pages.show(this.page, "next");
     }
   }
 
@@ -40,7 +40,7 @@ var Player = class {
     const isPlayFragment = this.prevFragment()
     if(page > 1 && !isPlayFragment) {
       this.page = page-1
-      presentation.pages.show(page, "prev");
+      presentation.pages.show(this.page, "prev");
     }
   }
 

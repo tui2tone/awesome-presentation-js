@@ -18,6 +18,7 @@ var Fragment = class {
 
     // Initial
     this.init()
+    this.elements.show(1)
   }
 
   getPosNumber(container) {
@@ -207,6 +208,7 @@ var Fragment = class {
         current: --current,
         all: all
       }
+      console.log(this.timeline)
       this.elements.show(this.timeline.current,"prev")
       return true
     }
