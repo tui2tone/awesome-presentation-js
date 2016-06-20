@@ -82,6 +82,7 @@ var Fragment = class {
       align: container.getAttribute("ap-align"),
       animateIn: container.getAttribute("ap-animate-in"),
       animateOut: container.getAttribute("ap-animate-out"),
+      autoplay: container.getAttribute("ap-autoplay") || false,
       display: display || 0,
       customDisplay: customDisplay || {},
       max: max || 1
@@ -188,6 +189,8 @@ var Fragment = class {
 
   next() {
     let { current, all } = this.timeline
+    const { autoplay } = this.pos
+    const comp = this
     if(current < all) {
       this.timeline = {
         ...this.timelime,
@@ -195,6 +198,11 @@ var Fragment = class {
         all: all
       }
       this.elements.show(this.timeline.current,"next")
+      if(autoplay) {
+        setTimeout((() => {
+          this.next()
+        }).bind(this), 50)
+      }
       return true
     }
     return false
@@ -202,14 +210,19 @@ var Fragment = class {
 
   prev() {
     let { current, all } = this.timeline
+    const { autoplay } = this.pos
     if(current > 1) {
       this.timeline = {
         ...this.timelime,
         current: --current,
         all: all
       }
-      console.log(this.timeline)
       this.elements.show(this.timeline.current,"prev")
+      if(autoplay) {
+        setTimeout((() => {
+          this.prev()
+        }).bind(this), 50)
+      }
       return true
     }
     return false
